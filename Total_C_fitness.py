@@ -5,7 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from timeit import default_timer as timer
 
+
 def fitness_C_total(fitness_village, N):
+    fitness_C_comm = np.zeros((N,N),dtype=float);
     for a in range(0,N):
         for b in range(0,N):
             if S[a,b] == 1:
