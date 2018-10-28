@@ -23,185 +23,88 @@ def simulate1(N, Nt, b, e):
     S[j-1:j+2, j-1:j+2] = 0
     fc = np.zeros(Nt+1)  # Fraction of points which are C
     fc[0] = S.sum()/(N*N)
-    score = np.zeros((N, N), dtype=float)
-    Number_Neighbours = np.zeros((N, N), dtype=int)
-    fitness_M_comm = np.zeros((N,N),dtype=float)
-    fitness_C_comm = np.zeros((N,N),dtype=float)
-    transition_probability_C = np.zeros((N,N),dtype=float)
-    transition_probability_M = np.zeros((N,N),dtype=object)
-    fitness_village = np.zeros((N,N),dtype=object)
-    probability_criteria = np.random.rand(N,N)
-
-    for t in range(1, Nt+1):
-        for a in range(0, N):
-            for b in range(0, N):
-                if S[a, b] == 0:
-                    if a == 0 and b == 0:
-                        Number_Neighbours[a, b] = 3
-                        for c in range(a, a+2):
-                            for d in range(b, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + b
-                                else:
-                                    score[a, b] = score[a, b] + e
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == N-1 and b == N-1:
-                        Number_Neighbours[a, b] = 3
-                        for c in range(a-1, a+1):
-                            for d in range(b-1, b+1):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + b
-                                else:
-                                    score[a, b] = score[a, b] + e
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == 0 and b == N-1:
-                        Number_Neighbours[a, b] = 3
-                        for c in range(a, a+2):
-                            for d in range(b-1, b+1):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + b
-                                else:
-                                    score[a, b] = score[a, b] + e
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == N-1 and b == 0:
-                        Number_Neighbours[a, b] = 3
-                        for c in range(a-1, a+1):
-                            for d in range(b, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + b
-                                else:
-                                    score[a, b] = score[a, b] + e
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif 0 < a < N-1 and b == 0:
-                        Number_Neighbours[a, b] = 5
-                        for c in range(a, a+2):
-                            for d in range(b-1, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + b
-                                else:
-                                    score[a, b] = score[a, b] + e
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif 0 < a < N-1 and b == N-1:
-                        Number_Neighbours[a, b] = 5
-                        for c in range(a, a+2):
-                            for d in range(b-1, b+1):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + b
-                                else:
-                                    score[a, b] = score[a, b] + e
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == 0 and 0 < b < N-1:
-                        Number_Neighbours[a, b] = 5
-                        for c in range(a-1, a+2):
-                            for d in range(b, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + b
-                                else:
-                                    score[a, b] = score[a, b] + e
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == N-1 and 0 < b < N-1:
-                        Number_Neighbours[a, b] = 5
-                        for c in range(a-1, a+1):
-                            for d in range(b-1, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + b
-                                else:
-                                    score[a, b] = score[a, b] + e
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    else:
-                        Number_Neighbours[a, b] = 5
-                        for c in range(a-1, a+2):
-                            for d in range(b-1, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + b
-                                else:
-                                    score[a, b] = score[a, b] + e
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                elif S[a, b] == 1:
-                    if a == 0 and b == 0:
-                        Number_Neighbours[a, b] = 3
-                        for c in range(a, a+2):
-                            for d in range(b, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == 0 and b == N-1:
-                        Number_Neighbours[a, b] = 3
-                        for c in range(a, a+2):
-                            for d in range(b-1, b+1):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == N-1 and b == N-1:
-                        Number_Neighbours[a, b] = 3
-                        for c in range(a-1, a+1):
-                            for d in range(b-1, b+1):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == N-1 and b == N-1:
-                        Number_Neighbours[a, b] = 3
-                        for c in range(a, a+2):
-                            for d in range(b-1, b+1):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == N-1 and b == 0:
-                        Number_Neighbours[a, b] = 3
-                        for c in range(a-1, a+1):
-                            for d in range(b, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif 0 < a < N-1 and b == 0:
-                        Number_Neighbours[a, b] = 5
-                        for c in range(a, a+2):
-                            for d in range(b-1, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif 0 < a < N-1 and b == N-1:
-                        Number_Neighbours[a, b] = 5
-                        for c in range(a, a+2):
-                            for d in range(b-1, b+1):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == 0 and 0 < b < N-1:
-                        Number_Neighbours[a, b] = 5
-                        for c in range(a, a+2):
-                            for d in range(b-1, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif a == N-1 and 0 < b < N-1:
-                        Number_Neighbours[a, b] = 5
-                        for c in range(a-1, a+1):
-                            for d in range(b-1, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
-                    elif 0 < a < N and 0 < b < N:
-                        Number_Neighbours[a, b] = 8
-                        for c in range(a-1, a+2):
-                            for d in range(b-1, b+2):
-                                if S[c, d] == 1:
-                                    score[a, b] = score[a, b] + 1
-                        fitness_village[a, b] = score[a,b]/Number_Neighbours[a,b]
+    A = 8*np.ones((N,N), dtype=object)
+    B = np.pad(np.zeros((N-2,N-2), dtype=object), pad_width=1, mode='constant', constant_values=3)
+    C = np.zeros((N,N))
+    C[0,0] = 2
+    C[0,C.shape[1]-1] = 2
+    C[C.shape[0]-1,0] = 2
+    C[C.shape[0]-1,C.shape[1]-1]=2
+    Number_Neighbours = A - B - C
+    Number_Neighbours = np.pad(Number_Neighbours, pad_width = 1, mode='constant', constant_values=2)
+    S  = np.pad(S, pad_width=1, mode='constant', constant_values=2)
+    score = np.zeros((N+2,N+2), dtype=object)
+    fitness_matrix = np.zeros((N+2,N+2), dtype=object)
+    fitness_C_comm = np.zeros((N+2,N+2), dtype=object)
+    fitness_M_comm = np.zeros((N+2,N+2), dtype=object)
+    transitionprob_to_M = np.zeros((N+2,N+2), dtype=object)
+    transitionprob_to_C = np.zeros((N+2,N+2), dtype=object)
 
 
-    """    for a in range(0,N):
-            for b in range(0,N):
-                transition_probability_M[a,b] = fitness_C_comm[a,b]/total_fitness[a,b]
-                transition_probability_C[a,b] = fitness_M_comm[a,b]/total_fitness[a,b]
-                if transition_probability_M[a,b] < probability_criteria[a,b]:
-                    S[a,b] = 1
+    for t in range(0,Nt):
+        for i in range(1,N+1):
+            for j in range(1,N+1):
+                if S[i,j] == 1:
+                    for c in range(i-1,i+2):
+                        for d in range(j-1,j+2):
+                            if S[c,d] == 1:
+                                score[i,j] = score[i,j] + 1
+                            else:
+                                score[i,j] = score[i,j]
+                    score[i,j] = score[i,j] - 1
+                elif S[i,j] == 0:
+                    for c in range(i-1,i+2):
+                        for d in range(j-1,j+2):
+                            if S[c,d] == 1:
+                                score[i,j] = score[i,j] + b
+                            elif S[c,d] == 0:
+                                score[i,j] = score[i,j] + e
+                            else:
+                                score[i,j] = score[i,j]
+                    score[i,j] = score[i,j] - e
                 else:
-                    S[a,b] = 0
-        for j in range(1,Nt):
-            fc[j] = S.sum()/(N*N)
-"""
-    return S, fc, fitness_village
+                    score[i,j] = 0
+        fitness_matrix = np.divide(score, Number_Neighbours)
+        for i in range(1,N+1):
+            for j in range(1,N+1):
+                for c in range(i-1,i+2):
+                    for d in range(j-1,j+2):
+                        if S[c,d] == 0:
+                            fitness_M_comm[i,j] = fitness_M_comm[i,j] + fitness_matrix[c,d]
+                            fitness_C_comm[i,j] = fitness_C_comm[i,j]
+                        elif S[c,d] == 1:
+                            fitness_C_comm[i,j] = fitness_C_comm[i,j] + fitness_matrix[c,d]
+                            fitness_M_comm[i,j] = fitness_M_comm[i,j]
+
+                        else:
+                            fitness_C_comm[i,j] = fitness_C_comm[i,j]
+                            fitness_M_comm[i,j] = fitness_C_comm[i,j]
+        for i in range(1,N+1):
+            for j in range(1,N+1):
+                if S[i,j] == 1:
+                    transitionprob_to_M[i,j] = fitness_C_comm[i,j]/(fitness_C_comm[i,j] + fitness_M_comm[i,j])
+                elif S[i,j] == 0:
+                    transitionprob_to_C[i,j] = fitness_M_comm[i,j]/(fitness_M_comm[i,j] + fitness_C_comm[i,j])
+
+        R = np.random.rand(N+2,N+2)
+        for i in range(1,N+1):
+            for j in range(1,N+1):
+                if S[i,j] == 1:
+                    if R[i,j] >= transitionprob_to_M[i,j]:
+                        S[i,j] = 0
+                    else:
+                        S[i,j] = 1
+                else:
+                    if R[i,j] >= transitionprob_to_C[i,j]:
+                        S[i,j] = 1
+                    else:
+                        S[i,j] = 0
+        plot_S(S)
+
+
+
+    return S, fc
+
 
 
 def plot_S(S):
