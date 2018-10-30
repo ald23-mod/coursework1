@@ -1,22 +1,16 @@
-
 """M3C 2018 Homework 1
-
 Anas Lasri Doukkali, CID:01209387
 """
 import numpy as np
 import matplotlib.pyplot as plt
-
-
 def simulate1(N, Nt, b, e):
     """Simulate C vs. M competition on N x N grid over.
-
     Nt generations. b and e are model parameters
     to be used in fitness calculations
     Output: S: Status of each gridpoint at end of simulation, 0=M, 1=C
     fc: fraction of villages which are C at all Nt+1 times
     Do not modify input or return statement without instructor's permission.
     """
-
     # Set initial condition
     S = np.ones((N, N), dtype=int)  # Status of each gridpoint: 0=M, 1=C
     j = int((N-1)/2)
@@ -39,8 +33,6 @@ def simulate1(N, Nt, b, e):
     fitness_M_comm = np.zeros((N+2,N+2), dtype=object)
     transitionprob_to_M = np.zeros((N+2,N+2), dtype=object)
     transitionprob_to_C = np.zeros((N+2,N+2), dtype=object)
-
-
     for t in range(0,Nt):
         for i in range(1,N+1):
             for j in range(1,N+1):
@@ -78,32 +70,37 @@ def simulate1(N, Nt, b, e):
 
                         else:
                             fitness_C_comm[i,j] = fitness_C_comm[i,j]
-                            fitness_M_comm[i,j] = fitness_C_comm[i,j]
+                            fitness_M_comm[i,j] = fitness_M_comm[i,j]
         for i in range(1,N+1):
             for j in range(1,N+1):
                 if S[i,j] == 1:
-                    transitionprob_to_M[i,j] = fitness_C_comm[i,j]/(fitness_C_comm[i,j] + fitness_M_comm[i,j])
+                    transitionprob_to_M[i,j] = fitness_M_comm[i,j]/(fitness_C_comm[i,j] + fitness_M_comm[i,j])
                 elif S[i,j] == 0:
-                    transitionprob_to_C[i,j] = fitness_M_comm[i,j]/(fitness_M_comm[i,j] + fitness_C_comm[i,j])
-
+                    transitionprob_to_C[i,j] = fitness_C_comm[i,j]/(fitness_M_comm[i,j] + fitness_C_comm[i,j])
         R = np.random.rand(N+2,N+2)
         for i in range(1,N+1):
             for j in range(1,N+1):
                 if S[i,j] == 1:
-                    if R[i,j] >= transitionprob_to_M[i,j]:
+                    if R[i,j] <= transitionprob_to_M[i,j]:
                         S[i,j] = 0
                     else:
                         S[i,j] = 1
                 else:
-                    if R[i,j] >= transitionprob_to_C[i,j]:
+                    if R[i,j] <= transitionprob_to_C[i,j]:
                         S[i,j] = 1
                     else:
                         S[i,j] = 0
+        fc[t+1] = (S.sum()-8*N-8)/(N*N)
+        """
+        S = np.delete(S,0,1)
+        S = np.delete(S,N,1)
+        S = np.delete(S,0,0)
+        S = np.delete(S,N,0)
+        #fc[t] = S.sum()/(N*N)
+        """
+
         plot_S(S)
-
-
-
-    return S, fc
+    return S, fc, score, fitness_matrix
 
 
 
@@ -126,9 +123,24 @@ def simulate2(N, Nt, b, e):
     """
 
 
-def analyze():
+def analyze(display=False):
     """ Add input variables as needed
     """
+    bvalues = [1.5, 5.0, 20, 100]
+    e = 0.01
+    N = 21
+    Nt = [0,21]
+    for b in enumerate(bvalues):
+        _,fc = simulate1(N,Nt,b,e)
+        print(fc)
+    if display:
+        plt.figure()
+        plt.plot(fc[:],Nt,'x--')
+
+
+
+
+
 
 if __name__ == '__main__':
 
