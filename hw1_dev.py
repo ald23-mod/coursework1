@@ -27,13 +27,13 @@ def simulate1(N, Nt, b, e):
     Number_Neighbours = A - B - C
     Number_Neighbours = np.pad(Number_Neighbours, pad_width = 1, mode='constant', constant_values=2)
     S  = np.pad(S, pad_width=1, mode='constant', constant_values=2)
-    score = np.zeros((N+2,N+2), dtype=object)
-    fitness_matrix = np.zeros((N+2,N+2), dtype=object)
-    fitness_C_comm = np.zeros((N+2,N+2), dtype=object)
-    fitness_M_comm = np.zeros((N+2,N+2), dtype=object)
-    transitionprob_to_M = np.zeros((N+2,N+2), dtype=object)
-    transitionprob_to_C = np.zeros((N+2,N+2), dtype=object)
     for t in range(0,Nt):
+        score = np.zeros((N+2,N+2), dtype=object)
+        fitness_matrix = np.zeros((N+2,N+2), dtype=object)
+        fitness_C_comm = np.zeros((N+2,N+2), dtype=object)
+        fitness_M_comm = np.zeros((N+2,N+2), dtype=object)
+        transitionprob_to_M = np.zeros((N+2,N+2), dtype=object)
+        transitionprob_to_C = np.zeros((N+2,N+2), dtype=object)
         for i in range(1,N+1):
             for j in range(1,N+1):
                 if S[i,j] == 1:
