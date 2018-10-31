@@ -41,7 +41,7 @@ def simulate1(N, Nt, b, e):
                         for d in range(j-1,j+2):
                             if S[c,d] == 1:
                                 score[i,j] = score[i,j] + 1
-                            else:
+                            elif S[c,d] == 0:
                                 score[i,j] = score[i,j]
                     score[i,j] = score[i,j] - 1
                 elif S[i,j] == 0:
@@ -51,11 +51,8 @@ def simulate1(N, Nt, b, e):
                                 score[i,j] = score[i,j] + b
                             elif S[c,d] == 0:
                                 score[i,j] = score[i,j] + e
-                            else:
-                                score[i,j] = score[i,j]
                     score[i,j] = score[i,j] - e
-                else:
-                    score[i,j] = 0
+
         fitness_matrix = np.divide(score, Number_Neighbours)
         for i in range(1,N+1):
             for j in range(1,N+1):
@@ -100,7 +97,7 @@ def simulate1(N, Nt, b, e):
         """
 
         plot_S(S)
-    return S, fc, score, fitness_matrix
+    return S, fc, fitness_matrix,transitionprob_to_C, transitionprob_to_M
 
 
 
