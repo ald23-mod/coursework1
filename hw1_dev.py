@@ -119,7 +119,6 @@ def simulate1(N, Nt, b, e):
     # Here I use slice to return S to its main form with no added borders
     slice_val = 1
     S = S[slice_val:-slice_val, slice_val:-slice_val]
-
     return S, fc
 
 def plot_S(S):
@@ -208,7 +207,7 @@ def simulate2(b , Nt, N=21, e=0.01):
         # calculate the fitness of each village
         fitness_matrix = np.divide(score, Number_Neighbours)
 
-        #######################################################################
+    ###########################################################################
         # Setting up the loops to calculate the fitness of the "Communities"
         for i in range(1,N+1):
             for j in range(1,N+1):
@@ -219,7 +218,7 @@ def simulate2(b , Nt, N=21, e=0.01):
                         elif S[c,d] == 1:
                             fitness_C_comm[i,j] = fitness_C_comm[i,j] + fitness_matrix[c,d]
 
-        #######################################################################
+    ###########################################################################
         # Setting up the loops to calculate the transition probabilities of each village
         for i in range(1,N+1):
             for j in range(1,N+1):
@@ -230,7 +229,7 @@ def simulate2(b , Nt, N=21, e=0.01):
 
         # Generating a random matrix with values between 0 and 1
         R = np.random.rand(N+1,N+1)
-        #######################################################################
+    ############################################################################
         # This is the part where the randomization happens. If the number
         # that was randomly generated is less than the transition probability
         # we then transition from our current state to the next one
@@ -251,11 +250,8 @@ def simulate2(b , Nt, N=21, e=0.01):
     # Here I use slice to return S to its main form with no added borders
     slice_val = 1
     S = S[slice_val:-slice_val, slice_val:-slice_val]
-
     return S, fc
-
 def analyze(display=False):
-    import matplotlib.patches as mpatches
     """ In this part of the coursework I decided to start by analysing how the
     proportion of C villages changes for different values of b. As we will see
     from the plots and values below I identified three main patterns. The first
@@ -283,7 +279,6 @@ def analyze(display=False):
             Nt = 15
             _,fc = simulate2(b, Nt)
             fc_array[t,i] =fc[-1]
-            print(i, b, fc[-1])
     if display:
         fig = plt.figure()
         for t in range(4):
@@ -291,46 +286,33 @@ def analyze(display=False):
             plt.plot(b_values[t,:],fc_array[t,:],'x--')
             plt.xlabel('b values')
             plt.ylabel('fc values')
-        plt.tight_layout()
-        fig.suptitle('fc variation', fontsize=12)
-        plt.savefig('test.png', dpi=300)
-        b_value = [1.5, 2.0, 5.0, 20]
-        b_value = np.array(b_value)
+        fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+        fig.suptitle('Anas Lasri from Analyze: fc variation.\n\n', fontsize=12)
+        plt.savefig('hw11.png', dpi=300)
+        plt.draw()
+        plt.pause(0.001)
+    b_value = [1.5, 2.0, 5.0, 20]
+    b_value = np.array(b_value)
     fc1 = np.zeros((4,21))
     for i,b in enumerate(b_value):
         _,fc = simulate2(b_value[i],20)
         fc1[i,:] = fc
     if display:
+        input("Press [enter] to continue")
         fig = plt.figure()
         plt.plot(np.linspace(1,15,21), fc1[0,:], 'g-',np.linspace(1,15,21), fc1[1,:], 'r-', np.linspace(1,15,21), fc1[2,:], 'b-', np.linspace(1,15,21), fc1[3,:], 'y-')
         plt.xlabel('time in years')
         plt.ylabel('fc')
-        plt.title('Multiple fc visualizations against time')
-
-        print(i, b, fc[-1])
-
-
+        plt.legend(('b = 1.5','b = 2.0','b = 5.0','b = 20.0'), loc='best')
+        plt.suptitle('Anas Lasri from Analyze \n Multiple fc visualizations against time')
+        plt.savefig('hw12.png', dpi=300)
+        plt.draw()
+        plt.pause(0.001)
     return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
-
-
+    """ I added user interactivity with the code. It will ask the user to press
+    enter
+    """
     # The code here should call analyze and generate the
     # figures that you are submitting with your code
-    output = analyze()
+    output = analyze(True)
