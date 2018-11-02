@@ -251,7 +251,7 @@ def simulate2(b , Nt, N=21, e=0.01):
     slice_val = 1
     S = S[slice_val:-slice_val, slice_val:-slice_val]
     return S, fc
-def analyze(display=False):
+def analyze():
     """ In this part of the coursework I decided to start by analysing how the
     proportion of C villages changes for different values of b. As we will see
     from the plots and values below I identified three main patterns. The first
